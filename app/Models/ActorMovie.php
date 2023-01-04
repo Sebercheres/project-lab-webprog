@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ActorMovie extends Model
 {
     use HasFactory;
-
+    public $timestamps = false;
     public $guarded = ['id'];
 
     public function actor(){

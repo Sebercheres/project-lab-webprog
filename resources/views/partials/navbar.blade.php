@@ -13,17 +13,15 @@
         </div>
         <div>
             <a href="">home</a>
-            <a href="">movies</a>
+            <a href="/movies">movies</a>
             <a href="">actor</a>
-            @guest
-                <a href="/login">login</a>
-                <a href="/register">register</a>
-            @endguest
+            <a href="/watchlist">My watchlist</a>
+            <a href="/login">login</a>
+            <a href="/register">register</a>
 
 
-            @auth
-                <a href="">logout</a>
-            @endauth
+            <a href="">logout</a>
+
         </div>
     </div>
 </body>

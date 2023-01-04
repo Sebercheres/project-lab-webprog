@@ -21,7 +21,7 @@ class CreateMoviesTable extends Migration
             $table->json('actors');
             $table->json('character_names');
             $table->string('director');
-            $table->timestamp('release_date');
+            $table->date('release_date');
             $table->string('image_url');
             $table->string('background_url');
         });

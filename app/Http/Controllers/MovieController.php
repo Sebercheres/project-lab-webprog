@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actor;
+use App\Models\Genre;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,10 @@ class MovieController extends Controller
      */
     public function index()
     {
-        //
+        return view('movies.index', [
+            'movies' => Movie::all(),
+            'genres'=> Genre::all()
+        ]);
     }
 
     /**
@@ -24,7 +29,10 @@ class MovieController extends Controller
      */
     public function create()
     {
-        //
+        return view('movies.create', [
+            'genres' => Genre::all(),
+            'actors' => Actor::all(),
+        ]);
     }
 
     /**
@@ -35,7 +43,26 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $image = $request->file('image');
+        $imageName = $image->getClientOriginalName();
+        $image->move(public_path('storage/images'), $imageName);
+
+        $background = $request->file('background');
+        $backgroundName = $background->getClientOriginalName();
+        $background->move(public_path('storage/backgrounds'), $backgroundName);
+        Movie::create([
+            'title' => $request->get('title'),
+            'description' => $request->get('description'),
+            'genres' => $request->get('genres'),
+            'actors' => $request->get('actors'),
+            'character_names' => $request->get('characters'),
+            'director' => $request->get('director'),
+            'release_date' => $request->get('release_date'),
+            'image_url' => $imageName,
+            'background_url' => $backgroundName,
+        ]);
+
+        return redirect()->route('movies.index');
     }
 
     /**
@@ -46,7 +73,7 @@ class MovieController extends Controller
      */
     public function show(Movie $movie)
     {
-        //
+
     }
 
     /**
