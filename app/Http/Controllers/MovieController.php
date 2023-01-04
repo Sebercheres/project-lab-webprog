@@ -71,9 +71,22 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function show(Movie $movie)
+    public function show(string $id)
     {
-
+        $movie = Movie::find($id);
+        $characters = $movie->character_names;
+        foreach($movie->genres as $genre){
+            $genres[] = Genre::find($genre);
+        }
+        foreach($movie->actors as $actor){
+            $actors[] = Actor::find($actor);
+        }
+        return view('movies.show', [
+            'movie' => $movie,
+            'characters' => $characters,
+            'genres' => $genres,
+            'actors' => $actors,
+        ]);
     }
 
     /**
