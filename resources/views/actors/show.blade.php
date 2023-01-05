@@ -9,10 +9,15 @@
     <img src="{{ url('storage/actorImages/' . $actor->image_url) }}" alt="">
     <p>{{ $actor->popularity }}</p>
     <br>
+    @foreach ($movies as $movie)
+        <a href="{{ route('movies.show', $movie->id) }}">
+            <h1>
+                {{ $movie->title }}
+            </h1>
+            <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt="">
+        </a>
+    @endforeach
+
     <a href="{{ route('actors.edit', $actor->id) }}">Edit</a>
-    <form action="{{ route('actors.destroy', $actor->id) }}" method="post">
-        @csrf
-        @method('DELETE')
-        <button type="submit">Delete</button>
-    </form>
+    <a href="/actors/{{ $actor->id }}/delete">delete</a>
 @endsection

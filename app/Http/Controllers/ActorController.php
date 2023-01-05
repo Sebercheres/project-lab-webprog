@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actor;
+use App\Models\ActorMovie;
+use App\Models\Movie;
 use Illuminate\Http\Request;
 
 class ActorController extends Controller
@@ -62,8 +64,18 @@ class ActorController extends Controller
      */
     public function show(string $id)
     {
+        $actorMovies = Actor::find($id)->movies;
+        $moviesId = [];
+        foreach($actorMovies as $actorMovie){
+            array_push($moviesId, $actorMovie->movie_id);
+        }
+
+        foreach($moviesId as $movieId){
+            $movies[] = Movie::find($movieId);
+        }
         return view('actors.show', [
-            'actor' => Actor::find($id)
+            'actor' => Actor::find($id),
+            'movies' => $movies
         ]);
     }
 
@@ -90,12 +102,12 @@ class ActorController extends Controller
     public function update(Request $request, string $id)
     {
         $actor = Actor::find($id);
-        $actor->name = $request->name ? $request->name : $actor->name;
-        $actor->gender = $request->gender ? $request->gender : $actor->gender;
-        $actor->biography = $request->bio ? $request->bio : $actor->biography;
+        $actor->name = $request->name;
+        $actor->gender = $request->gender;
+        $actor->biography = $request->bio;
         $actor->date_of_birth = $request->dob ? $request->dob : $actor->date_of_birth;
-        $actor->place_of_birth = $request->pob ? $request->pob : $actor->place_of_birth;
-        $actor->popularity = $request->popularity ? $request->popularity : $actor->popularity;
+        $actor->place_of_birth = $request->pob;
+        $actor->popularity = $request->popularity;
 
         $image = $request->file('image');
         if($image){
@@ -117,8 +129,13 @@ class ActorController extends Controller
     public function destroy(string $id)
     {
         $actor = Actor::find($id);
-        unlink(public_path('storage/actorImages/'.$actor->image_url));
-        $actor->delete();
-        return redirect()->route('actors.index');
+        if($actor->movies){
+            return "MOTHAFAKA";
+        }
+        // unlink(public_path('storage/actorImages/'. $actor->image_url));
+        // $actorMovies = ActorMovie::where('actor_id', $id)->get();
+        // $actorMovies->destroy();
+        // $actor->destroy();
+        // return redirect()->route('actors.index');
     }
 }

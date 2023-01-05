@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Actor;
+use App\Models\ActorMovie;
 use App\Models\Genre;
 use App\Models\Movie;
 use Illuminate\Http\Request;
@@ -43,24 +44,39 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
+        $movie = new Movie();
+        $movie->title = $request->get('title');
+        $movie->description = $request->get('description');
+        $movie->genres = $request->get('genres');
+        $movie->actors = $request->get('actors');
+
+        $movie->character_names = $request->get('characters');
+        $movie->director = $request->get('director');
+        $movie->release_date = $request->get('release_date');
+
         $image = $request->file('image');
         $imageName = $image->getClientOriginalName();
         $image->move(public_path('storage/movieImages'), $imageName);
+        $movie->image_url = $imageName;
 
         $background = $request->file('background');
         $backgroundName = $background->getClientOriginalName();
         $background->move(public_path('storage/backgrounds'), $backgroundName);
-        Movie::create([
-            'title' => $request->get('title'),
-            'description' => $request->get('description'),
-            'genres' => $request->get('genres'),
-            'actors' => $request->get('actors'),
-            'character_names' => $request->get('characters'),
-            'director' => $request->get('director'),
-            'release_date' => $request->get('release_date'),
-            'image_url' => $imageName,
-            'background_url' => $backgroundName,
-        ]);
+        $movie->background_url = $backgroundName;
+
+        $movie->save(['returning' => true]);
+        $movieId = $movie->id;
+
+        foreach($request->get('actors') as $actor){
+            $actorMovie = new ActorMovie();
+            $actorMovie->actor_id = $actor;
+            $actorMovie->movie_id = $movieId;
+            if($actorMovie->actor_id == ActorMovie::where('actor_id', $actorMovie->actor_id)->where('movie_id', $actorMovie->movie_id)->first()){
+                continue;
+            }else{
+                $actorMovie->save();
+            }
+        }
 
         return redirect()->route('movies.index');
     }
@@ -106,6 +122,7 @@ class MovieController extends Controller
             'movie' => $movie,
             'genres' => Genre::all(),
             'actors' => $actors,
+            'actorAll' => Actor::all(),
             'characters' => $movie->character_names,
         ]);
     }
@@ -120,12 +137,28 @@ class MovieController extends Controller
     public function update(Request $request, string $id)
     {
         $movie = Movie::find($id);
-        $movie->title = $request->get('title') ? $request->get('title') : $movie->title;
-        $movie->description = $request->get('description') ? $request->get('description') : $movie->description;
+        $movie->title = $request->get('title');
+        $movie->description = $request->get('description');
         $movie->genres = $request->get('genres') ? $request->get('genres') : $movie->genres;
-        $movie->actors = $request->get('actors') ? $request->get('actors') : $movie->actors;
-        $movie->character_names = $request->get('characters') ? $request->get('characters') : $movie->character_names;
-        $movie->director = $request->get('director') ? $request->get('director') : $movie->director;
+
+        $movie->actors = $request->get('actors');
+
+        $actorMovie = ActorMovie::where('movie_id', $movie->id);
+        $actorMovie->delete();
+        foreach($request->get('actors') as $actor){
+            $actorMovie = new ActorMovie();
+            $actorMovie->actor_id = $actor;
+            $actorMovie->movie_id = $movie->id;
+            if(ActorMovie::where('actor_id', $actorMovie->actor_id)->where('movie_id', $actorMovie->movie_id)->first()){
+                continue;
+            }else{
+                $actorMovie->save();
+            }
+        }
+
+
+        $movie->character_names = $request->get('characters');
+        $movie->director = $request->get('director');
         $movie->release_date = $request->get('release_date') ? $request->get('release_date') : $movie->release_date;
 
         if($request->file('image')){
@@ -157,6 +190,8 @@ class MovieController extends Controller
         $movie = Movie::find($id);
         unlink(public_path('storage/movieImages/' . $movie->image_url));
         unlink(public_path('storage/backgrounds/' . $movie->background_url));
+        $actorMovies = ActorMovie::where('movie_id', $id);
+        $actorMovies->delete();
         $movie->delete();
         return redirect()->route('movies.index');
     }

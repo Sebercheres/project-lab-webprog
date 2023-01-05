@@ -24,11 +24,11 @@
 
 
         <div>
-            @foreach (array_map(null, $actors, $characters) as [$actor, $character])
+            @foreach (array_map(null, $actors, $characters) as [$actorN, $character])
                 <label for="actors">actor</label>
                 <select name="actors[]" id="actors">
-                    @foreach ($actors as $actor)
-                        <option value="{{ $actor->id }}" {{ $actor->id == $actor->id ? 'selected' : '' }}>
+                    @foreach ($actorAll as $actor)
+                        <option value="{{ $actor->id }}" {{ $actorN->id == $actor->id ? 'selected' : '' }}>
                             {{ $actor->name }}</option>
                     @endforeach
                 </select>
@@ -43,7 +43,7 @@
                 <div class="actor">
                     <label for="actor">actor</label>
                     <select name="actors[]" id="actor">
-                        @foreach ($actors as $actor)
+                        @foreach ($actorAll as $actor)
                             <option value="{{ $actor->id }}">{{ $actor->name }}</option>
                         @endforeach
                     </select>

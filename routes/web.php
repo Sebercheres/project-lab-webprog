@@ -27,7 +27,7 @@ Route::group(['prefix' => 'movies'], function (){
     Route::get('/', [MovieController::class, 'index'])->name('movies.index');
     Route::get('/create', [MovieController::class, 'create']);
     Route::post('/create', [MovieController::class, 'store']);
-    Route::get('/{id}', [MovieController::class, 'show']);
+    Route::get('/{id}', [MovieController::class, 'show'])->name('movies.show');
     Route::get('/{id}/edit', [MovieController::class, 'edit']);
     Route::post('/{id}/edit', [MovieController::class, 'update']);
     Route::get('/{id}/delete', [MovieController::class, 'destroy']);
