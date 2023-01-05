@@ -1,6 +1,11 @@
 @extends('layouts.main')
 
 @section('content')
+
+    @error('deleteFirst')
+        <h1>{{ $message }}</h1>
+    @enderror
+
     <h1>{{ $actor->name }}</h1>
     <p>{{ $actor->gender }}</p>
     <p>{{ $actor->biography }}</p>

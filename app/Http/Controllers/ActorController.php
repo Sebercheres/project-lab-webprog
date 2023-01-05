@@ -130,12 +130,12 @@ class ActorController extends Controller
     {
         $actor = Actor::find($id);
         if($actor->movies){
-            return "MOTHAFAKA";
+            return redirect()->route('actors.show', $id)->withErrors(['deleteFirst' => 'You must delete all movies of this actor first or you can changed the actors.']);
         }
-        // unlink(public_path('storage/actorImages/'. $actor->image_url));
-        // $actorMovies = ActorMovie::where('actor_id', $id)->get();
-        // $actorMovies->destroy();
-        // $actor->destroy();
-        // return redirect()->route('actors.index');
+        unlink(public_path('storage/actorImages/'. $actor->image_url));
+        $actorMovies = ActorMovie::where('actor_id', $id)->get();
+        $actorMovies->destroy();
+        $actor->destroy();
+        return redirect()->route('actors.index');
     }
 }
