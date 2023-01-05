@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActorController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [UserController::class, 'index']);
+Route::get('/home', [UserController::class, 'index']);
 Route::get('/login', [UserController::class, 'Pagelogin']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/register', [UserController::class, 'create']);
@@ -29,4 +31,14 @@ Route::group(['prefix' => 'movies'], function (){
     Route::get('/{id}/edit', [MovieController::class, 'edit']);
     Route::post('/{id}/edit', [MovieController::class, 'update']);
     Route::get('/{id}/delete', [MovieController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'actors'], function (){
+    Route::get('/', [ActorController::class, 'index'])->name('actors.index');
+    Route::get('/create', [ActorController::class, 'create'])->name('actors.create');
+    Route::post('/create', [ActorController::class, 'store']);
+    Route::get('/{id}', [ActorController::class, 'show'])->name('actors.show');
+    Route::get('/{id}/edit', [ActorController::class, 'edit'])->name('actors.edit');
+    Route::post('/{id}/edit', [ActorController::class, 'update']);
+    Route::get('/{id}/delete', [ActorController::class, 'destroy'])->name('actors.destroy');
 });

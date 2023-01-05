@@ -14,7 +14,9 @@ class ActorController extends Controller
      */
     public function index()
     {
-        //
+        return view('actors.index', [
+            'actors' => Actor::all()
+        ]);
     }
 
     /**
@@ -24,7 +26,7 @@ class ActorController extends Controller
      */
     public function create()
     {
-        //
+        return view('actors.create');
     }
 
     /**
@@ -35,7 +37,21 @@ class ActorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $image = $request->file('image');
+        $imageName = $image->getClientOriginalName();
+        $image->move(public_path('storage/actorImages'), $imageName);
+
+        Actor::create([
+            'name' => $request->name,
+            'gender' => $request->gender,
+            'biography' => $request->bio,
+            'date_of_birth' => $request->dob,
+            'place_of_birth' => $request->pob,
+            'image_url' => $imageName,
+            'popularity' => $request->popularity
+        ]);
+
+        return redirect()->route('actors.index');
     }
 
     /**
@@ -44,9 +60,11 @@ class ActorController extends Controller
      * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Http\Response
      */
-    public function show(Actor $actor)
+    public function show(string $id)
     {
-        //
+        return view('actors.show', [
+            'actor' => Actor::find($id)
+        ]);
     }
 
     /**
@@ -55,9 +73,11 @@ class ActorController extends Controller
      * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Http\Response
      */
-    public function edit(Actor $actor)
+    public function edit(string $id)
     {
-        //
+        return view('actors.edit', [
+            'actor' => Actor::find($id)
+        ]);
     }
 
     /**

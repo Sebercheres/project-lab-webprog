@@ -7,11 +7,15 @@
     <div>
         <h1>popular</h1>
         @foreach ($movies as $movie)
-            <a href="/movies/{{ $movie->id }}">
-                <img src="{{ url('storage/images/' . $movie->image_url) }}" alt="">
-                <h2>{{ $movie->title }}</h2>
-                <p>{{ $movie->description }}</p>
-            </a>
+            <div>
+                <a href="/movies/{{ $movie->id }}">
+                    <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt="">
+                    <h2>{{ $movie->title }}</h2>
+                    <p>{{ $movie->description }}</p>
+                    <a href="/movies/{{ $movie->id }}/edit">edit</a>
+                    <a href="/movies/{{ $movie->id }}/delete">delete</a>
+                </a>
+            </div>
         @endforeach
     </div>
     <div>
@@ -34,12 +38,15 @@
         <a href="/movies/create">add movie</a>
 
         @foreach ($movies as $movie)
-            <div>
-                <img src="{{ url('storage/images/' . $movie->image_url) }}" alt="">
-                <h2>{{ $movie->title }}</h2>
-                <p>{{ $movie->description }}</p>
-                <a href="/movies/{{ $movie->id }}">detail</a>
-            </div>
+            <a href="/movies/{{ $movie->id }}">
+                <div>
+                    <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt="">
+                    <h2>{{ $movie->title }}</h2>
+                    <p>{{ $movie->description }}</p>
+                    <a href="/movies/{{ $movie->id }}/edit">edit</a>
+                    <a href="/movies/{{ $movie->id }}/delete">delete</a>
+                </div>
+            </a>
         @endforeach
     </div>
 @endsection

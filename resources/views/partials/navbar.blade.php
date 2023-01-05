@@ -12,16 +12,13 @@
             movie list
         </div>
         <div>
-            <a href="">home</a>
+            <a href="/home">home</a>
             <a href="/movies">movies</a>
-            <a href="">actor</a>
+            <a href="/actors">actor</a>
             <a href="/watchlist">My watchlist</a>
             <a href="/login">login</a>
             <a href="/register">register</a>
-
-
-            <a href="">logout</a>
-
+            <a href="/logout">logout</a>
         </div>
     </div>
 </body>

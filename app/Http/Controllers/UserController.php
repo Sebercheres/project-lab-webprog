@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Genre;
+use App\Models\Movie;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('welcome');
+        return view('movies.index', [
+            'movies' => Movie::all(),
+            'genres'=> Genre::all()
+        ]);
     }
 
     /**

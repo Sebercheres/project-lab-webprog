@@ -10,5 +10,6 @@
     @include('partials.navbar')
     @yield('content')
     @include('partials.footer')
+    <script src={{ url('js/addMore.js') }}></script>
 </body>
 </html>

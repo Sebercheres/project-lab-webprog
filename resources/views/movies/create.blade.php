@@ -55,6 +55,7 @@
         <br/>
         <button type="submit">save</button>
 
-        <script src={{ url('js/addMore.js') }}></script>
+
     </form>
+
 @endsection

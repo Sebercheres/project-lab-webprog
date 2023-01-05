@@ -45,7 +45,7 @@ class MovieController extends Controller
     {
         $image = $request->file('image');
         $imageName = $image->getClientOriginalName();
-        $image->move(public_path('storage/images'), $imageName);
+        $image->move(public_path('storage/movieImages'), $imageName);
 
         $background = $request->file('background');
         $backgroundName = $background->getClientOriginalName();
@@ -74,18 +74,19 @@ class MovieController extends Controller
     public function show(string $id)
     {
         $movie = Movie::find($id);
-        $characters = $movie->character_names;
         foreach($movie->genres as $genre){
             $genres[] = Genre::find($genre);
         }
         foreach($movie->actors as $actor){
             $actors[] = Actor::find($actor);
         }
+        $otherMovies = Movie::where('id', '!=', $id)->get();
         return view('movies.show', [
             'movie' => $movie,
-            'characters' => $characters,
+            'characters' => $movie->character_names,
             'genres' => $genres,
             'actors' => $actors,
+            'otherMovies' => $otherMovies,
         ]);
     }
 
@@ -95,9 +96,18 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function edit(Movie $movie)
+    public function edit(string $id)
     {
-        //
+        $movie = Movie::find($id);
+        foreach($movie->actors as $actor){
+            $actors[] = Actor::find($actor);
+        }
+        return view('movies.edit', [
+            'movie' => $movie,
+            'genres' => Genre::all(),
+            'actors' => $actors,
+            'characters' => $movie->character_names,
+        ]);
     }
 
     /**
@@ -107,9 +117,18 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Movie $movie)
+    public function update(Request $request, string $id)
     {
-        //
+        $movie = Movie::find($id);
+        $movie->title = $request->get('title') ? $request->get('title') : $movie->title;
+        $movie->description = $request->get('description') ? $request->get('description') : $movie->description;
+        $movie->genres = $request->get('genres') ? $request->get('genres') : $movie->genres;
+        $movie->actors = $request->get('actors') ? $request->get('actors') : $movie->actors;
+        $movie->character_names = $request->get('characters') ? $request->get('characters') : $movie->character_names;
+        $movie->director = $request->get('director') ? $request->get('director') : $movie->director;
+        $movie->release_date = $request->get('release_date') ? $request->get('release_date') : $movie->release_date;
+        $movie->save();
+        return redirect()->route('movies.index');
     }
 
     /**
@@ -118,8 +137,12 @@ class MovieController extends Controller
      * @param  \App\Models\Movie  $movie
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Movie $movie)
+    public function destroy(string $id)
     {
-        //
+        $movie = Movie::find($id);
+        unlink(public_path('storage/movieImages/' . $movie->image_url));
+        unlink(public_path('storage/backgrounds/' . $movie->background_url));
+        $movie->delete();
+        return redirect()->route('movies.index');
     }
 }
