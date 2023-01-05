@@ -127,6 +127,21 @@ class MovieController extends Controller
         $movie->character_names = $request->get('characters') ? $request->get('characters') : $movie->character_names;
         $movie->director = $request->get('director') ? $request->get('director') : $movie->director;
         $movie->release_date = $request->get('release_date') ? $request->get('release_date') : $movie->release_date;
+
+        if($request->file('image')){
+            unlink(public_path('storage/movieImages/' . $movie->image_url));
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName();
+            $image->move(public_path('storage/movieImages'), $imageName);
+            $movie->image_url = $imageName;
+        }
+        if($request->file('background')){
+            unlink(public_path('storage/backgrounds/' . $movie->background_url));
+            $background = $request->file('background');
+            $backgroundName = $background->getClientOriginalName();
+            $background->move(public_path('storage/backgrounds'), $backgroundName);
+            $movie->background_url = $backgroundName;
+        }
         $movie->save();
         return redirect()->route('movies.index');
     }

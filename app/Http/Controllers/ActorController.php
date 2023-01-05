@@ -87,9 +87,25 @@ class ActorController extends Controller
      * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Actor $actor)
+    public function update(Request $request, string $id)
     {
-        //
+        $actor = Actor::find($id);
+        $actor->name = $request->name ? $request->name : $actor->name;
+        $actor->gender = $request->gender ? $request->gender : $actor->gender;
+        $actor->biography = $request->bio ? $request->bio : $actor->biography;
+        $actor->date_of_birth = $request->dob ? $request->dob : $actor->date_of_birth;
+        $actor->place_of_birth = $request->pob ? $request->pob : $actor->place_of_birth;
+        $actor->popularity = $request->popularity ? $request->popularity : $actor->popularity;
+
+        $image = $request->file('image');
+        if($image){
+            unlink(public_path('storage/actorImages/'.$actor->image_url));
+            $imageName = $image->getClientOriginalName();
+            $image->move(public_path('storage/actorImages'), $imageName);
+            $actor->image_url = $imageName;
+        }
+        $actor->save();
+        return redirect()->route('actors.index');
     }
 
     /**
@@ -98,8 +114,11 @@ class ActorController extends Controller
      * @param  \App\Models\Actor  $actor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Actor $actor)
+    public function destroy(string $id)
     {
-        //
+        $actor = Actor::find($id);
+        unlink(public_path('storage/actorImages/'.$actor->image_url));
+        $actor->delete();
+        return redirect()->route('actors.index');
     }
 }
