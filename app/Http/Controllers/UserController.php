@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Genre;
-use App\Models\Movie;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -16,9 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('movies.index', [
-            'movies' => Movie::all(),
-            'genres' => Genre::all()
+        $id = auth()->user()->id;
+        return view('profile', [
+            'user' => User::find($id),
         ]);
     }
 
@@ -70,9 +69,24 @@ class UserController extends Controller
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, string $id)
     {
-        //
+        $user = User::find($id);
+        $user->username = $request->username;
+        $user->email = $request->email;
+
+        if($request->hasFile('avatar')){
+            $image = $request->file('avatar');
+            $imageName = $image->getClientOriginalName();
+            $image->move(public_path('storage/avatar'), $imageName);
+            $user->avatar = $imageName;
+        }
+
+        $user->dob = $request->dob ? $request->dob : $user->dob;
+        $user->phone = $request->phone;
+
+        $user->save();
+        return redirect()->route('profile');
     }
 
     /**

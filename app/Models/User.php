@@ -12,7 +12,13 @@ class User extends Model implements AuthenticatableContract
     use HasFactory, Authenticatable;
     protected $guarded = [];
 
-    public function movies(){
+    public function movies()
+    {
         return $this->hasMany(UserMovie::class);
+    }
+
+    public function hasRole($role)
+    {
+        return $this->role === $role;
     }
 }

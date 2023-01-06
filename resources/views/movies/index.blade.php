@@ -6,14 +6,15 @@
     </div>
     <div>
         <h1>popular</h1>
-        @foreach ($movies as $movie)
+        @foreach ($popularMovies as $movie)
             <div>
                 <a href="/movies/{{ $movie->id }}">
-                    <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt="">
+                    {{-- <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt=""> --}}
                     <h2>{{ $movie->title }}</h2>
-                    <p>{{ $movie->description }}</p>
-                    <a href="/movies/{{ $movie->id }}/edit">edit</a>
-                    <a href="/movies/{{ $movie->id }}/delete">delete</a>
+                    {{-- <p>{{ $movie->description }}</p> --}}
+                    @if (Auth::User() && Auth::User()->hasRole('user'))
+                        <a href="/bookmark/{{ $movie->id }}">bookmark</a>
+                    @endif
                 </a>
             </div>
         @endforeach
@@ -40,11 +41,12 @@
         @foreach ($movies as $movie)
             <a href="/movies/{{ $movie->id }}">
                 <div>
-                    <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt="">
+                    {{-- <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt=""> --}}
                     <h2>{{ $movie->title }}</h2>
                     <p>{{ $movie->description }}</p>
-                    <a href="/movies/{{ $movie->id }}/edit">edit</a>
-                    <a href="/movies/{{ $movie->id }}/delete">delete</a>
+                    @if (Auth::User() && Auth::User()->hasRole('user'))
+                        <a href="/bookmark/{{ $movie->id }}">bookmark</a>
+                    @endif
                 </div>
             </a>
         @endforeach

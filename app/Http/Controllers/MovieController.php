@@ -6,6 +6,7 @@ use App\Models\Actor;
 use App\Models\ActorMovie;
 use App\Models\Genre;
 use App\Models\Movie;
+use App\Models\UserMovie;
 use Illuminate\Http\Request;
 
 class MovieController extends Controller
@@ -17,9 +18,11 @@ class MovieController extends Controller
      */
     public function index()
     {
+        $countUserMovie = UserMovie::count();
         return view('movies.index', [
             'movies' => Movie::all(),
-            'genres'=> Genre::all()
+            'genres'=> Genre::all(),
+            'popularMovies' => Movie::all(),
         ]);
     }
 
@@ -194,5 +197,15 @@ class MovieController extends Controller
         $actorMovies->delete();
         $movie->delete();
         return redirect()->route('movies.index');
+    }
+
+    public function genre(string $id){
+        $genre = Genre::find($id);
+        $movies = Movie::where('genres', 'like', '%'.$genre->id.'%')->get();
+        return view('movies.index', [
+            'genres' => Genre::all(),
+            'movies' => $movies,
+            'popularMovies' => Movie::all(),
+        ]);
     }
 }

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -31,13 +32,15 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        Session::put('success', 'You have successfully registered. Please login to continue.');
+
         // Redirect the user to the login page
-        return redirect()->route('login')->with('success', 'Your account has been created! You can now log in.');
+        return redirect()->route('login');
     }
 
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('auth.login', ['success' ]);
     }
 
     public function login(Request $request)
@@ -63,6 +66,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+        Session::invalidate();
         return redirect()->route('login');
     }
 }

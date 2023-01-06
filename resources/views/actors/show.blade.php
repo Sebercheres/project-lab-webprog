@@ -1,7 +1,6 @@
 @extends('layouts.main')
 
 @section('content')
-
     @error('deleteFirst')
         <h1>{{ $message }}</h1>
     @enderror
@@ -23,6 +22,8 @@
         </a>
     @endforeach
 
-    <a href="{{ route('actors.edit', $actor->id) }}">Edit</a>
-    <a href="/actors/{{ $actor->id }}/delete">delete</a>
+    @if (Auth::User() && Auth::User()->hasRole('admin'))
+        <a href="{{ route('actors.edit', $actor->id) }}">Edit</a>
+        <a href="/actors/{{ $actor->id }}/delete">delete</a>
+    @endif
 @endsection
