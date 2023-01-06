@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActorController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -18,10 +19,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [UserController::class, 'index']);
 Route::get('/home', [UserController::class, 'index']);
-Route::get('/login', [UserController::class, 'Pagelogin']);
-Route::post('/login', [UserController::class, 'login']);
-Route::get('/register', [UserController::class, 'create']);
-Route::post('/register', [UserController::class, 'store']);
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::group(['prefix' => 'movies'], function (){
     Route::get('/', [MovieController::class, 'index'])->name('movies.index');

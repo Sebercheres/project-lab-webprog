@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         return view('movies.index', [
             'movies' => Movie::all(),
-            'genres'=> Genre::all()
+            'genres' => Genre::all()
         ]);
     }
 
@@ -29,7 +29,6 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('register');
     }
 
     /**
@@ -40,19 +39,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'username' => 'required',
-            'email' => 'required',
-            'password' => 'required'
-        ]);
-
-        $user = new User([
-            'username' => $request->get('username'),
-            'email' => $request->get('email'),
-            'password' => $request->get('password')
-        ]);
-        $user->save();
-        return redirect('/')->with('success', 'User has been added');
     }
 
     /**
@@ -98,25 +84,5 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
-    }
-
-    public function Pagelogin()
-    {
-        return view('login');
-    }
-
-    public function login()
-    {
-        $email = request('email');
-        $password = request('password');
-
-        $user = User::where('email', $email)->first();
-
-        if ($user && $user->password == $password) {
-            session(['user' => $user]);
-            return redirect('/');
-        } else {
-            return redirect('/login');
-        }
     }
 }

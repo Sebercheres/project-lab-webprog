@@ -1,6 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-danger" role="alert">
+                {{ $error }}
+            </div>
+        @endforeach
+    @endif
     <form action="/register" method="post">
         @csrf
         <input type="text" name="username" placeholder="username">

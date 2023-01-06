@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Auth\Authenticatable;
 
-class User extends Model
+class User extends Model implements AuthenticatableContract
 {
-    use HasFactory;
-    public $guarded = ['id'];
+    use HasFactory, Authenticatable;
+    protected $guarded = [];
 
     public function movies(){
         return $this->hasMany(UserMovie::class);

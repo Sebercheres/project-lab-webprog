@@ -15,10 +15,14 @@
             <a href="/home">home</a>
             <a href="/movies">movies</a>
             <a href="/actors">actor</a>
-            <a href="/watchlist">My watchlist</a>
+            @auth
+                <a href="/watchlist">My watchlist</a>
+                <a href="/logout">logout</a>
+            @endauth
+
             <a href="/login">login</a>
             <a href="/register">register</a>
-            <a href="/logout">logout</a>
+
         </div>
     </div>
 </body>

@@ -17,6 +17,7 @@ class CreateUserMoviesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('movie_id');
+            $table->string('status');
         });
     }
 
