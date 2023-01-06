@@ -70,9 +70,11 @@ class ActorController extends Controller
             array_push($moviesId, $actorMovie->movie_id);
         }
 
+        $movies = [];
         foreach($moviesId as $movieId){
-            $movies[] = Movie::find($movieId);
+            array_push($movies, Movie::find($movieId));
         }
+
         return view('actors.show', [
             'actor' => Actor::find($id),
             'movies' => $movies

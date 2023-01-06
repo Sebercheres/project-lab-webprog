@@ -13,14 +13,17 @@
     <img src="{{ url('storage/actorImages/' . $actor->image_url) }}" alt="">
     <p>{{ $actor->popularity }}</p>
     <br>
-    @foreach ($movies as $movie)
-        <a href="{{ route('movies.show', $movie->id) }}">
-            <h1>
-                {{ $movie->title }}
-            </h1>
-            <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt="">
-        </a>
-    @endforeach
+
+    @if ($movies)
+        @foreach ($movies as $movie)
+            <a href="{{ route('movies.show', $movie->id) }}">
+                <h1>
+                    {{ $movie->title }}
+                </h1>
+                <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt="">
+            </a>
+        @endforeach
+    @endif
 
     @if (Auth::User() && Auth::User()->hasRole('admin'))
         <a href="{{ route('actors.edit', $actor->id) }}">Edit</a>
