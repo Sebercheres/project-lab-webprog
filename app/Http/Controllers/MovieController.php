@@ -6,7 +6,6 @@ use App\Models\Actor;
 use App\Models\ActorMovie;
 use App\Models\Genre;
 use App\Models\Movie;
-use App\Models\UserMovie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -246,6 +245,7 @@ class MovieController extends Controller
             'genres' => Genre::all(),
             'movies' => $movies,
             'popularMovies' => $this->popularMovies(),
+            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
         ]);
     }
 
@@ -257,6 +257,7 @@ class MovieController extends Controller
             'genres' => Genre::all(),
             'movies' => $movies,
             'popularMovies' => $this->popularMovies(),
+            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
         ]);
     }
 
@@ -267,6 +268,7 @@ class MovieController extends Controller
             'genres' => Genre::all(),
             'movies' => $movies,
             'popularMovies' => $this->popularMovies(),
+            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
         ]);
     }
 
@@ -277,6 +279,7 @@ class MovieController extends Controller
             'genres' => Genre::all(),
             'movies' => $movies,
             'popularMovies' => $this->popularMovies(),
+            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
         ]);
     }
 }

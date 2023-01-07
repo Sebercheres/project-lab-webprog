@@ -50,6 +50,7 @@
                     {{-- <p>{{ $movie->description }}</p> --}}
                     @if (Auth::User() && Auth::User()->hasRole('user'))
                         <a href="/bookmark/{{ $movie->id }}">bookmark</a>
+                        <a href="/bookmark/{{ $movie->id }}/delete">delete</a>
                     @endif
                 </div>
             </a>

@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/watchlist', [UserController::class, 'watchlist'])->name('watchlist');
     Route::get('/bookmark/{id}', [UserController::class, 'bookmark'])->name('bookmark');
     Route::post('/bookmark/{id}', [UserController::class, 'bookmarkController']);
+    Route::get('/bookmark/{id}/delete', [UserController::class, 'deleteBookmark'])->name('deleteBookmark');
 });
 
 Route::group(['prefix' => 'movies'], function () {

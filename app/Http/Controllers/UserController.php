@@ -24,47 +24,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -96,17 +55,6 @@ class UserController extends Controller
 
         $user->save();
         return redirect()->route('profile');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
     }
 
     public function watchlist()
@@ -149,6 +97,12 @@ class UserController extends Controller
             return redirect()->route('watchlist');
         }
         $userMovie->save();
+        return redirect()->route('watchlist');
+    }
+
+    public function deleteBookmark(string $id){
+        $userMovies = UserMovie::where('user_id', auth()->user()->id)->where('movie_id', $id)->get();
+        $userMovies[0]->delete();
         return redirect()->route('watchlist');
     }
 }
