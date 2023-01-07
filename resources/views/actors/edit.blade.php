@@ -3,6 +3,13 @@
 @section('content')
     <form action="/actors/{{ $actor->id }}/edit" method="post" enctype="multipart/form-data">
         @csrf
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-danger" role="alert">
+                    {{ $error }}
+                </div>
+            @endforeach
+        @endif
         <div class="name">
             <label for="name">name</label>
             <input type="text" name="name" id="name" value="{{ $actor->name }}">
@@ -37,7 +44,8 @@
 
         <div class="popularity">
             <label for="popularity">Popularity</label>
-            <input type="number" step='0.1' min="0" max="10" name="popularity" id="popularity" value="{{ $actor->popularity }}">
+            <input type="number" step='0.1' min="0" max="10" name="popularity" id="popularity"
+                value="{{ $actor->popularity }}">
         </div>
 
         <button type="submit">save</button>

@@ -4,6 +4,13 @@
     <h1>add movie</h1>
     <form action='/movies/create' method="post" enctype="multipart/form-data">
         @csrf
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-danger" role="alert">
+                    {{ $error }}
+                </div>
+            @endforeach
+        @endif
         <label for="title">title</label>
         <input type="text" name="title" id="title">
 
@@ -52,7 +59,7 @@
 
         <label for="background">Background URL</label>
         <input type="file" name="background" id="background">
-        <br/>
+        <br />
         <button type="submit">save</button>
 
 

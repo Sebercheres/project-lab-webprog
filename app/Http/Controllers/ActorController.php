@@ -39,6 +39,16 @@ class ActorController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|min:3',
+            'gender' => 'required',
+            'bio' => 'required|min:10',
+            'dob' => 'required',
+            'pob' => 'required',
+            'image' => 'required|image',
+            'popularity' => 'required|numeric'
+        ]);
+
         $image = $request->file('image');
         $imageName = $image->getClientOriginalName();
         $image->move(public_path('storage/actorImages'), $imageName);
@@ -66,12 +76,12 @@ class ActorController extends Controller
     {
         $actorMovies = Actor::find($id)->movies;
         $moviesId = [];
-        foreach($actorMovies as $actorMovie){
+        foreach ($actorMovies as $actorMovie) {
             array_push($moviesId, $actorMovie->movie_id);
         }
 
         $movies = [];
-        foreach($moviesId as $movieId){
+        foreach ($moviesId as $movieId) {
             array_push($movies, Movie::find($movieId));
         }
 
@@ -103,6 +113,16 @@ class ActorController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $request->validate([
+            'name' => 'required|min:3',
+            'gender' => 'required',
+            'bio' => 'required|min:10',
+            'dob' => 'required',
+            'pob' => 'required',
+            'image' => 'required|image',
+            'popularity' => 'required|numeric'
+        ]);
+
         $actor = Actor::find($id);
         $actor->name = $request->name;
         $actor->gender = $request->gender;
@@ -112,8 +132,8 @@ class ActorController extends Controller
         $actor->popularity = $request->popularity;
 
         $image = $request->file('image');
-        if($image){
-            unlink(public_path('storage/actorImages/'.$actor->image_url));
+        if ($image) {
+            unlink(public_path('storage/actorImages/' . $actor->image_url));
             $imageName = $image->getClientOriginalName();
             $image->move(public_path('storage/actorImages'), $imageName);
             $actor->image_url = $imageName;
@@ -131,13 +151,22 @@ class ActorController extends Controller
     public function destroy(string $id)
     {
         $actor = Actor::find($id);
-        if($actor->movies){
+        if ($actor->movies) {
             return redirect()->route('actors.show', $id)->withErrors(['deleteFirst' => 'You must delete all movies of this actor first or you can changed the actors.']);
         }
-        unlink(public_path('storage/actorImages/'. $actor->image_url));
+        unlink(public_path('storage/actorImages/' . $actor->image_url));
         $actorMovies = ActorMovie::where('actor_id', $id)->get();
         $actorMovies->destroy();
         $actor->destroy();
         return redirect()->route('actors.index');
+    }
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+        $actors = Actor::where('name', 'like', '%' . $search . '%')->get();
+        return view('actors.index', [
+            'actors' => $actors
+        ]);
     }
 }

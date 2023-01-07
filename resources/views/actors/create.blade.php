@@ -3,6 +3,13 @@
 @section('content')
     <form action="/actors/create" enctype="multipart/form-data" method="post">
         @csrf
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-danger" role="alert">
+                    {{ $error }}
+                </div>
+            @endforeach
+        @endif
         <div class="">
             <label for="name">name</label>
             <input type="text" name="name" id="name">

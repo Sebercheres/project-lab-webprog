@@ -20,9 +20,9 @@ class AuthController extends Controller
     {
         // Validate the form data
         $this->validate($request, [
-            'username' => 'required|max:255',
+            'username' => 'required|max:255|min:5',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:6|confirmed|alpha_num',
         ]);
 
         // Create the user
@@ -32,7 +32,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Session::put('success', 'You have successfully registered. Please login to continue.');
+        Session::put('message', 'You have successfully registered. Please login to continue.');
 
         // Redirect the user to the login page
         return redirect()->route('login');
@@ -40,7 +40,7 @@ class AuthController extends Controller
 
     public function showLoginForm()
     {
-        return view('auth.login', ['success' ]);
+        return view('auth.login', ['success']);
     }
 
     public function login(Request $request)
@@ -50,6 +50,7 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
+        Session::invalidate();
 
         // Attempt to log the user in
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
@@ -57,9 +58,7 @@ class AuthController extends Controller
             return redirect()->intended('/');
         } else {
             // If unsuccessful, redirect the user back to the login page with an error message
-            return redirect()->back()->withInput($request->only('email'))->withErrors([
-                'email' => 'The email or password is incorrect.',
-            ]);
+            return redirect()->back()->withErrors('Invalid email or password');
         }
     }
 

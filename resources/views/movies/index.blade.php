@@ -2,7 +2,9 @@
 
 @section('content')
     <div>
-        disini gambar gede
+        @foreach ($randomMovies as $movie)
+            <h1>{{ $movie->title }}</h1>
+        @endforeach
     </div>
     <div>
         <h1>popular</h1>
@@ -36,14 +38,16 @@
         <a href="/movies/sort/asc">asc</a>
         <a href="/movies/sort/desc">desc</a>
 
-        <a href="/movies/create">add movie</a>
+        @if (Auth::User() && Auth::User()->hasRole('admin'))
+            <a href="/movies/create">add movie</a>
+        @endif
 
         @foreach ($movies as $movie)
             <a href="/movies/{{ $movie->id }}">
                 <div>
                     {{-- <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt=""> --}}
                     <h2>{{ $movie->title }}</h2>
-                    <p>{{ $movie->description }}</p>
+                    {{-- <p>{{ $movie->description }}</p> --}}
                     @if (Auth::User() && Auth::User()->hasRole('user'))
                         <a href="/bookmark/{{ $movie->id }}">bookmark</a>
                     @endif

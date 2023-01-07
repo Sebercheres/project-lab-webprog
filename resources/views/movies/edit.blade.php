@@ -3,6 +3,13 @@
 @section('content')
     <form action="/movies/{{ $movie->id }}/edit" enctype="multipart/form-data" method="post">
         @csrf
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                <div class="alert alert-danger" role="alert">
+                    {{ $error }}
+                </div>
+            @endforeach
+        @endif
         <div>
             <label for="title">title</label>
             <input type="text" name="title" id="title" value="{{ $movie->title }}">
