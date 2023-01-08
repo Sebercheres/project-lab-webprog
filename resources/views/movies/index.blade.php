@@ -14,9 +14,9 @@
                     {{-- <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt=""> --}}
                     <h2>{{ $movie->title }}</h2>
                     {{-- <p>{{ $movie->description }}</p> --}}
-                    @if (Auth::User() && Auth::User()->hasRole('user'))
+                    {{-- @if (Auth::User() && Auth::User()->hasRole('user'))
                         <a href="/bookmark/{{ $movie->id }}">bookmark</a>
-                    @endif
+                    @endif --}}
                 </a>
             </div>
         @endforeach
@@ -49,8 +49,11 @@
                     <h2>{{ $movie->title }}</h2>
                     {{-- <p>{{ $movie->description }}</p> --}}
                     @if (Auth::User() && Auth::User()->hasRole('user'))
-                        <a href="/bookmark/{{ $movie->id }}">bookmark</a>
-                        <a href="/bookmark/{{ $movie->id }}/delete">delete</a>
+                        @if(DB::table('user_movies')->where('user_id', Auth::User()->id)->where('movie_id', $movie->id)->exists())
+                            <a href="/bookmark/{{ $movie->id }}">unbookmark</a>
+                        @else
+                            <a href="/bookmark/{{ $movie->id }}">bookmark</a>
+                        @endif
                     @endif
                 </div>
             </a>

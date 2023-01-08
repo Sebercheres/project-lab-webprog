@@ -34,7 +34,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/watchlist', [UserController::class, 'watchlist'])->name('watchlist');
     Route::get('/bookmark/{id}', [UserController::class, 'bookmark'])->name('bookmark');
     Route::post('/bookmark/{id}', [UserController::class, 'bookmarkController']);
-    Route::get('/bookmark/{id}/delete', [UserController::class, 'deleteBookmark'])->name('deleteBookmark');
+    Route::get('watchlist/search', [UserController::class, 'searchWatchlist'])->name('searchWatchlist');
+    Route::get('watchlist/filter', [UserController::class, 'filterWatchlist'])->name('filterWatchlist');
 });
 
 Route::group(['prefix' => 'movies'], function () {

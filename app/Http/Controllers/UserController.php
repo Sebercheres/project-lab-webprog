@@ -78,12 +78,14 @@ class UserController extends Controller
         $userId = auth()->user()->id;
         $movieId = $id;
         if (UserMovie::where('user_id', $userId)->where('movie_id', $movieId)->exists()) {
+            $userMovie = UserMovie::where('user_id', $userId)->where('movie_id', $movieId)->first();
+            $userMovie->delete();
             return redirect()->back();
         }
         $userMovie = new UserMovie();
         $userMovie->user_id = $userId;
         $userMovie->movie_id = $movieId;
-        $userMovie->status = 'Planning';
+        $userMovie->status = 'planning';
         $userMovie->save();
         return redirect()->route('movies.index');
     }
@@ -100,9 +102,44 @@ class UserController extends Controller
         return redirect()->route('watchlist');
     }
 
-    public function deleteBookmark(string $id){
-        $userMovies = UserMovie::where('user_id', auth()->user()->id)->where('movie_id', $id)->get();
-        $userMovies[0]->delete();
-        return redirect()->route('watchlist');
+    public function searchWatchlist(Request $request){
+        $userMovies = UserMovie::where('user_id', auth()->user()->id)->get();
+        $movies = [];
+        foreach ($userMovies as $item) {
+            array_push($movies, Movie::find($item->movie_id));
+        }
+        for ($i = 0; $i < count($movies); $i++) {
+            $movies[$i]->status = $userMovies[$i]->status;
+            $movies[$i]->umId = $userMovies[$i]->id;
+        }
+        $search = $request->search;
+        $movies = array_filter($movies, function($movie) use ($search){
+            return strpos(strtolower($movie->title), strtolower($search)) !== false;
+        });
+        return view('watchlist', [
+            'movies' => $movies,
+        ]);
+    }
+
+    public function filterWatchlist(Request $request){
+        $userMovies = UserMovie::where('user_id', auth()->user()->id)->get();
+        if($request->filter == 'all'){
+            return redirect()->route('watchlist');
+        }
+        $movies = [];
+        foreach ($userMovies as $item) {
+            array_push($movies, Movie::find($item->movie_id));
+        }
+        for ($i = 0; $i < count($movies); $i++) {
+            $movies[$i]->status = $userMovies[$i]->status;
+            $movies[$i]->umId = $userMovies[$i]->id;
+        }
+        $status = $request->filter;
+        $movies = array_filter($movies, function($movie) use ($status){
+            return $movie->status == $status;
+        });
+        return view('watchlist', [
+            'movies' => $movies,
+        ]);
     }
 }

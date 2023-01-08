@@ -2,7 +2,19 @@
 
 @section('content')
     <h1>My Watchlist</h1>
-
+    <form action="/watchlist/search" method="get">
+        <input type="text" name="search" id="search">
+        <button type="submit">Search</button>
+    </form>
+    <form action="/watchlist/filter" method="get">
+        <select name="filter" id="">
+            <option value="all">All</option>
+            <option value="planning">planned</option>
+            <option value="watching">watching</option>
+            <option value="finished">finished</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
     @foreach ($movies as $movie)
         {{-- <a href="/movies/{{ $movie->id }}"> --}}
             <div>
