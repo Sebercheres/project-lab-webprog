@@ -6,6 +6,14 @@
     <p>{{ $user->username }}</p>
     <p>{{ $user->email }}</p>
 
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert alert-danger" role="alert">
+                {{ $error }}
+            </div>
+        @endforeach
+    @endif
+
     <form action="/profile/{{ $user->id }}" method="post" enctype="multipart/form-data">
         @csrf
         <label for="username">Username</label>
