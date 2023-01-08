@@ -4,6 +4,9 @@
     <div>
         @foreach ($randomMovies as $movie)
             <h1>{{ $movie->title }}</h1>
+            @foreach ($movie->genre_names as $names )
+                <p>{{ $names }}</p>
+            @endforeach
         @endforeach
     </div>
     <div>
@@ -13,10 +16,6 @@
                 <a href="/movies/{{ $movie->id }}">
                     {{-- <img src="{{ url('storage/movieImages/' . $movie->image_url) }}" alt=""> --}}
                     <h2>{{ $movie->title }}</h2>
-                    {{-- <p>{{ $movie->description }}</p> --}}
-                    {{-- @if (Auth::User() && Auth::User()->hasRole('user'))
-                        <a href="/bookmark/{{ $movie->id }}">bookmark</a>
-                    @endif --}}
                 </a>
             </div>
         @endforeach

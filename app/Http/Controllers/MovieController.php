@@ -18,11 +18,18 @@ class MovieController extends Controller
             ->groupBy('movie_id')
             ->orderByDesc('count')
             ->get();
-        $popularMovies = [];
         foreach ($results as $result) {
             $popularMovies[] = Movie::find($result->movie_id);
         }
         return $popularMovies;
+    }
+
+    public function randomMovies(){
+        $randomMovies = Movie::inRandomOrder()->limit(3)->get();
+        for($i = 0; $i < count($randomMovies); $i++) {
+            $randomMovies[$i]->genre_names = Genre::find($randomMovies[$i]->genres)->pluck('name');
+        }
+        return $randomMovies;
     }
 
     /**
@@ -36,7 +43,7 @@ class MovieController extends Controller
             'movies' => Movie::all(),
             'genres' => Genre::all(),
             'popularMovies' => $this->popularMovies(),
-            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
+            'randomMovies' => $this->randomMovies(),
         ]);
     }
 
@@ -245,7 +252,7 @@ class MovieController extends Controller
             'genres' => Genre::all(),
             'movies' => $movies,
             'popularMovies' => $this->popularMovies(),
-            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
+            'randomMovies' => $this->randomMovies(),
         ]);
     }
 
@@ -257,7 +264,7 @@ class MovieController extends Controller
             'genres' => Genre::all(),
             'movies' => $movies,
             'popularMovies' => $this->popularMovies(),
-            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
+            'randomMovies' => $this->randomMovies(),
         ]);
     }
 
@@ -268,7 +275,7 @@ class MovieController extends Controller
             'genres' => Genre::all(),
             'movies' => $movies,
             'popularMovies' => $this->popularMovies(),
-            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
+            'randomMovies' => $this->randomMovies(),
         ]);
     }
 
@@ -279,7 +286,7 @@ class MovieController extends Controller
             'genres' => Genre::all(),
             'movies' => $movies,
             'popularMovies' => $this->popularMovies(),
-            'randomMovies' => Movie::inRandomOrder()->limit(3)->get(),
+            'randomMovies' => $this->randomMovies(),
         ]);
     }
 }
